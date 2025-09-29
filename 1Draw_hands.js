@@ -18,21 +18,23 @@ function drawInteraction(faces, hands) {
     let indexFingerTipX = hand.index_finger_tip.x;
     let indexFingerTipY = hand.index_finger_tip.y;
 
-    //  let pinkyFingerTipX = hand.pinky_finger_tip.x;
-    //  let pinkyFingerTipY = hand.pinky_finger_tip.y;
+    let pinkyFingerTipX = hand.pinky_finger_tip.x;
+    let pinkyFingerTipY = hand.pinky_finger_tip.y;
 
     /*
     Start drawing on the hands here
     */
 
     fill(225, 225, 0);
-    ellipse(indexFingerTipX, indexFingerTipY, 30, 30);
+    ellipse(pinkyFingerTipX, pinkyFingerTipY, 30, 30);
 
-    // drawPoints(hand)
+    draw12(hand);
+
+    //drawPoints(hand)
 
     //fingerPuppet(indexFingerTipX, indexFingerTipY);
 
-    //chameleonHandPuppet(hand)
+    // chameleonHandPuppet(hand)
 
     /*
     Stop drawing on the hands here
@@ -131,4 +133,36 @@ function drawPoints(feature) {
   }
   pop()
 
+}
+
+function draw12(hand){
+  
+    let a = hand.index_finger_tip;
+    let b = hand.index_finger_dip;
+    let c = hand.index_finger_pip;
+    let d = hand.index_finger_mcp;
+
+    push();
+    strokeWeight(20);
+    line(a.x,a.y,b.x,b.y);
+    line(b.x,b.y,c.x,c.y);
+    line(c.x,c.y,d.x,d.y);
+    face(a.x,a.y);
+    pop();
+  
+}
+
+function face(x,y){
+  push();
+  strokeWeight(2);
+  fill(255,222,33);
+  ellipse(x,y,60,60);
+  push();
+  fill(0);
+  ellipse(x-15,y-5,10,10);
+  ellipse(x+15,y-5,10,10);
+
+  curve(x-15,y-10,x-15,y+10,x+15,y+10,x+15,y-15);
+  pop();
+  pop();
 }
