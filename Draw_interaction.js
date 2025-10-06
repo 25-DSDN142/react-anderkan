@@ -1,6 +1,7 @@
 // ----=  HANDS  =----
+let bgImage;
 function prepareInteraction() {
-  //bgImage = loadImage('/images/background.png');
+  bgImage = loadImage('/images/plane.png');
 }
 
 function drawInteraction(faces, hands) {
@@ -22,6 +23,10 @@ function drawInteraction(faces, hands) {
     /*
     Start drawing on the hands here
     */
+    push();
+    imageMode(CENTER);
+    image(bgImage,indexFingerTipX,indexFingerTipY,500,500);
+    pop();
 
     // pinchCircle(hand)
     fill(225, 225, 0);
@@ -58,8 +63,8 @@ function drawInteraction(faces, hands) {
     Start drawing on the face here
     */
 
-    // fill(225, 225, 0);
-    // ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
+    fill(225, 225, 0);
+    ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
 
     drawPoints(face.leftEye);
     drawPoints(face.leftEyebrow);
