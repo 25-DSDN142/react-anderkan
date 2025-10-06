@@ -2,6 +2,7 @@
 let bgImage;
 function prepareInteraction() {
   bgImage = loadImage('/images/plane.png');
+  faceImage = loadImage('/images/Head.png');
 }
 
 function drawInteraction(faces, hands) {
@@ -47,7 +48,7 @@ function drawInteraction(faces, hands) {
     if (showKeypoints) {
       drawPoints(face)
     }
-    // console.log(face);
+    console.log(face);
     /*
     Once this program has a face, it knows some things about it.
     This includes how to draw a box around the face, and an oval. 
@@ -59,18 +60,37 @@ function drawInteraction(faces, hands) {
      face.rightEyebrow
     */
 
+    let faceCenterX = face.faceOval.centerX;
+    let faceCenterY = face.faceOval.centerY;
+
+    let leftEyeCenterX = face.leftEye.centerX;
+    let leftEyeCenterY = face.leftEye.centerY;
+
+    let rightEyeCenterX = face.rightEye.centerX;
+    let rightEyeCenterY = face.rightEye.centerY;
+
+    // let dist  = dist(leftEyeCenterX,leftEyeCenterY,rightEyeCenterX,rightEyeCenterY);
     /*
     Start drawing on the face here
     */
 
-    fill(225, 225, 0);
-    ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
+    // fill(225, 225, 0);
+    // ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
+
+    ellipse();
 
     drawPoints(face.leftEye);
     drawPoints(face.leftEyebrow);
     drawPoints(face.lips);
     drawPoints(face.rightEye);
     drawPoints(face.rightEyebrow);
+
+
+    push();
+    imageMode(CENTER);
+    image(faceImage,faceCenterX+25,faceCenterY,500,750);
+    pop();
+
     /*
     Stop drawing on the face here
     */
