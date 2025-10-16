@@ -1,8 +1,10 @@
 // ----=  HANDS  =----
 let bgImage;
+let isMouthOpen = false;
+
 function prepareInteraction() {
   bgImage = loadImage('/images/plane.png');
-  faceImage = loadImage('/images/Head.png');
+  faceNorm = loadImage('/images/Head.png');
 }
 
 function drawInteraction(faces, hands) {
@@ -85,10 +87,11 @@ function drawInteraction(faces, hands) {
     drawPoints(face.rightEye);
     drawPoints(face.rightEyebrow);
 
+    mthCheck(face);
 
     push();
     imageMode(CENTER);
-    image(faceImage,faceCenterX+25,faceCenterY,500,750);
+    image(faceNorm,faceCenterX+25,faceCenterY,500,750);
     pop();
 
     /*
@@ -149,4 +152,16 @@ function drawPoints(feature) {
   }
   pop()
 
+}
+
+function mouthCheck(face) {
+  let upperLip = face.keypoints[13]
+  let lowerLip = face.keypoints[14]
+
+  let dist = dist(upperLip.x, upperLip.y, lowerLip.x, lowerLip.y);
+  if (dist < 10) {
+    isMouthOpen = false;
+  } else {
+    isMouthOpen = true;
+  }
 }
