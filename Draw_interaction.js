@@ -1,14 +1,21 @@
 // ----=  HANDS  =----
 let bgImage;
+let faceNorm;
+let faceExcited;
+let handImageL;
+let handImageR;
 let isMouthOpen = false;
 
 function prepareInteraction() {
-  bgImage = loadImage('/images/plane.png');
+  handImageL = loadImage('/images/handL.png');
+  handImageR = loadImage('/images/handR.png');
+  bgImage = loadImage('/images/background.png');
   faceNorm = loadImage('/images/Head.png');
+  faceExcited = loadImage('/images/HeadOpen.png');
 }
 
 function drawInteraction(faces, hands) {
-
+  drawBackground();
   // hands part
   // USING THE GESTURE DETECTORS (check their values in the debug menu)
   // detectHandGesture(hand) returns "Pinch", "Peace", "Thumbs Up", "Pointing", "Open Palm", or "Fist"
@@ -21,19 +28,55 @@ function drawInteraction(faces, hands) {
       drawConnections(hand)
     }
     // console.log(hand);
+    let hX;
+    let hY;
+
     let indexFingerTipX = hand.index_finger_tip.x;
     let indexFingerTipY = hand.index_finger_tip.y;
+
+    let indexFingerMcpX = hand.index_finger_mcp.x;
+    let indexFingerMcpY = hand.index_finger_mcp.y;
+
+    let wristX = hand.wrist.x;
+    let wristY = hand.wrist.y;
+
+    let pinkyFingerMcpX = hand.pinky_finger_mcp.x;
+    let pinkyFingerMcpY = hand.pinky_finger_mcp.y;
+
+    hX = (indexFingerMcpX + wristX + pinkyFingerMcpX)/3
+    hY = (indexFingerMcpY + wristY + pinkyFingerMcpY)/3
+    
+    let side = hand.handedness;
+    let rX = indexFingerMcpX - pinkyFingerMcpX;
+    let rY = indexFingerMcpY - pinkyFingerMcpY;
+
+    //rotateAmount = Math.atan2(rY,rX);
     /*
     Start drawing on the hands here
     */
-    push();
-    imageMode(CENTER);
-    image(bgImage,indexFingerTipX,indexFingerTipY,500,500);
-    pop();
 
-    // pinchCircle(hand)
-    fill(225, 225, 0);
-    ellipse(indexFingerTipX, indexFingerTipY, 30, 30);
+   if (side == "Left") {
+    push();
+    rotateAmount = Math.atan2(rY,rX);
+    imageMode(CENTER);
+    translate(hX,hY);
+    rotate(rotateAmount)
+    image(handImageL,0,0,400,250);
+    pop();
+   }
+   else {
+    push();
+    rotateAmount = Math.atan2(rY,rX)+PI;
+    imageMode(CENTER);
+    translate(hX,hY);
+    rotate(rotateAmount)
+    image(handImageR,0,0,400,250);
+    pop();
+   }
+
+    // // pinchCircle(hand)
+    // fill(225, 225, 0);
+    // ellipse(indexFingerTipX, indexFingerTipY, 30, 30);
 
     /*
     Stop drawing on the hands here
@@ -79,20 +122,26 @@ function drawInteraction(faces, hands) {
     // fill(225, 225, 0);
     // ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
 
-    ellipse();
+    // ellipse();
 
-    drawPoints(face.leftEye);
-    drawPoints(face.leftEyebrow);
-    drawPoints(face.lips);
-    drawPoints(face.rightEye);
-    drawPoints(face.rightEyebrow);
+    // drawPoints(face.leftEye);
+    // drawPoints(face.leftEyebrow);
+    // drawPoints(face.lips);
+    // drawPoints(face.rightEye);
+    // drawPoints(face.rightEyebrow);
 
-    mthCheck(face);
+    mouthCheck(face);
+    if (isMouthOpen){
+      drawHead(faceExcited,faceCenterX,faceCenterY,leftEyeCenterX,leftEyeCenterY,rightEyeCenterX,rightEyeCenterY);
+    }
+    else {
+      drawHead(faceNorm,faceCenterX,faceCenterY,leftEyeCenterX,leftEyeCenterY,rightEyeCenterX,rightEyeCenterY);
+    }
 
-    push();
-    imageMode(CENTER);
-    image(faceNorm,faceCenterX+25,faceCenterY,500,750);
-    pop();
+    // push();
+    // imageMode(CENTER);
+    // image(faceNorm,faceCenterX+25,faceCenterY,500,750);
+    // pop();
 
     /*
     Stop drawing on the face here
@@ -158,10 +207,30 @@ function mouthCheck(face) {
   let upperLip = face.keypoints[13]
   let lowerLip = face.keypoints[14]
 
-  let dist = dist(upperLip.x, upperLip.y, lowerLip.x, lowerLip.y);
-  if (dist < 10) {
+  let d = dist(upperLip.x, upperLip.y, lowerLip.x, lowerLip.y);
+  if (d < 10) {
     isMouthOpen = false;
   } else {
     isMouthOpen = true;
   }
+}
+
+function drawHead(head,x,y,leftEyeCenterX,leftEyeCenterY,rightEyeCenterX,rightEyeCenterY) {
+ let rotateAmount; 
+  
+ let dy = leftEyeCenterY - rightEyeCenterY;
+ let dx = leftEyeCenterX - rightEyeCenterX;
+  
+  rotateAmount = Math.atan2(dy,dx);
+  
+  push();
+  translate(x,y);
+  imageMode(CENTER);
+  rotate(rotateAmount);
+  image(head,0,0,300,450);
+  pop();
+}
+
+function drawBackground() {
+  image(bgImage,0,0,1280,960);
 }
